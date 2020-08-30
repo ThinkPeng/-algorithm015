@@ -10,7 +10,7 @@ Deque<Integer> stack = new ArrayQueue<Integer>();
 ```
 
 (2) 优先队列（Priority Queue），可以按照元素的优先级获取元素的数据结构。
-底层具体实现的数据结构较为多样和复杂，可以是：heap、bst、treap，其插入操作时间复杂度是 O(1), 取出操作是 O(logN)。
+底层具体实现的数据结构较为多样和复杂，可以是：heap、bst、treap，其插入取出操作时间复杂度是 O(logN)。
 
 ## 二、做题时使用的解题技巧
  
