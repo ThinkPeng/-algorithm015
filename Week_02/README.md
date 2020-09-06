@@ -28,4 +28,15 @@
 3. 借助优先队列(PriorityQueue)来使用二叉堆解决获取最大值、最小值、前 N 个最大/最小值问题。
 4. 有些题目算法实现过程结果需要存放到 List 中，并且最终返回的结果是跟算法存放的顺序相反的，那么可以使用 LinkedList 来存放，存放时使用 list.add(0, node);
 
-## 三、HashMap 源码分析
+## 三、HashMap 源码分析(基于 Java 1.8.0_201)
+1. 重要成员：
+- Node<K,V>[] table
+- Node<K,V> implements Map.Entry<K,V> {
+    final int hash;
+    final K key;    
+    V value;
+    Node<K,V> next;
+}
+
+2. put() 操作分析
+(1) 首先计算((n - 1) & hash)求出当前节点应该存放在 table 数组的索引位置。如果该位置当前为空，直接将结点放到此位置。
