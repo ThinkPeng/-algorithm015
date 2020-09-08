@@ -25,3 +25,5 @@ public void recur(int level, int param) {
 2. 分治、回溯
 
 ## 二、做题时使用的解题技巧
+
+1. 二叉搜索树(BST)的中序遍历是递增的。
