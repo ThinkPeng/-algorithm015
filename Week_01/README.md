@@ -6,7 +6,7 @@
 (1) 双端队列（Deque，Double-End Queue），一种可以从头和尾插入元素，也可以从头和尾删除元素的数据结构，可以理解为 Stack 和 Queue 的结合体。
 在工程实现中，推荐直接使用 Deque 代替 Queue 和 Stack:
 ```
-Deque<Integer> stack = new ArrayQueue<Integer>();
+Deque<Integer> stack = new ArrayDeque<Integer>();//也可使用 LinkedList
 ```
 
 (2) 优先队列（Priority Queue），可以按照元素的优先级获取元素的数据结构。
