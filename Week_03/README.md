@@ -23,6 +23,25 @@ public void recur(int level, int param) {
 - 数学归纳法思维；
 
 2. 分治、回溯
+```
+//Java 分治代码模版
+private static int divide_conquer(Problem problem) { 
+  if (problem == NULL) {//没有子问题了，
+    int res = process_last_result();
+    return res;     
+  }
+  subProblems = split_problem(problem);//处理当前层逻辑（把大问题分割成小问题）
+  
+  res0 = divide_conquer(subProblems[0]);//下探到下一层
+  res1 = divide_conquer(subProblems[1]);
+  
+  result = process_result(res0, res1);//组装结果
+  
+  return result;
+}
+```
+
+回溯：采用试错的思想，尝试分步去解决一个问题。
 
 ## 二、做题时使用的解题技巧
 
