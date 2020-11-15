@@ -262,14 +262,325 @@ https://redisbook.readthedocs.io/en/latest/internal-datastruct/skiplist.html
   
   回溯代码模版参考递归的代码模版。
   
+  #### 九、DFS 和 BFS
+  
+  代码模版参考树的遍历。
+  
+  #### 十、贪心算法
+  
+  1、定义
+  
+  贪心算法是一种在每一步选择中都采取在当前状态下最好或最优(即最有利)的选择，从而希望导致结果是全局最好或最优的算法。
+  
+  贪心算法与动态规划的不同在于它对每个子问题的解决方案都做出选择，不能回退。动态规划则会保存以前的运算结果，并根据以前的结果对当前进行选择，有回退功能。
+  
+  2、适用场景
+  
+  问题能够分解成子问题来解决，子问题的最优解能递推到最终问题的最优解。这种子问题最优解称为最优子结构。
+  
+  #### 十一、二分查找
+  
+  1、二分查找的前提
+  - 目标函数单调性（单调递增或递减）
+  - 存在上下界面
+  - 能够通过索引访问
+  
+  2、代码模版
+  ```
+  //求中间位置时使用 mid = (right - left) / 2 + left
+  //不直接使用 (left + right) / 2 的原因是 left + right 结果有可能大于 2147483647 导致溢出。
+  //也可使用 (left + right) >> 1 ，但可能也需要考虑溢出问题。
+  public int binarySearch(int[] array, int target) {
+      int left = 0, right = array.length - 1, mid;
+      while (left <= right) {
+          mid = (right - left) / 2 + left;
+
+          if (array[mid] == target) {
+              return mid;
+          } else if (array[mid] > target) {
+              right = mid - 1;
+          } else {
+              left = mid + 1;
+          }
+      }
+
+      return -1;
+  }
+  ```
+ 
+  #### 十二、动态规划
+  
+  1、关键点
+  
+  动态规划 和 递归或者分治 没有根本上的区别(关键看有无最优的子结构)
+  
+  共性：找到重复子问题。
+  
+  差异性：最优子结构、中途可以淘汰次优解。
+  
+  2、做题步骤
+  - 寻找最优子结构。
+  - 定义状态
+  - 定义状态转移方程
+  
+  #### 十三、字典树、并查集
+  
+  1、字典树(Trie)
+  - 定义：字典树，即 Trie 树，又称单词查找树或键树，是一种树形结构。典型应用是用于统计和排序大量的字符串(但不仅限于字符串)，所以经常被搜索引擎系统用于文本词频统计。
+  - 优点：最大限度地减少无谓的字符串比较，查询效率比哈希表高。
+  - 性质：
+    - 结点本身不存放完整单词
+    - 从根结点到某一结点，路径上经过的字符连接起来，为该结点对应的字符串;
+    - 每个结点的所有子结点路径代表的字符都不相同。
+  - 代码模版：
+  ```
+  class Trie {
+    private boolean isEnd;
+    private Trie[] next;
+    /** Initialize your data structure here. */
+    public Trie() {
+        isEnd = false;
+        next = new Trie[26];
+    }
+    
+    /** Inserts a word into the trie. */
+    public void insert(String word) {
+        if (word == null || word.length() == 0) return;
+        Trie curr = this;
+        char[] words = word.toCharArray();
+        for (int i = 0;i < words.length;i++) {
+            int n = words[i] - 'a';
+            if (curr.next[n] == null) curr.next[n] = new Trie();
+            curr = curr.next[n];
+        }
+        curr.isEnd = true;
+    }
+    
+    /** Returns if the word is in the trie. */
+    public boolean search(String word) {
+        Trie node = searchPrefix(word);
+        return node != null && node.isEnd;
+    }
+    
+    /** Returns if there is any word in the trie that starts with the given prefix. */
+    public boolean startsWith(String prefix) {
+        Trie node = searchPrefix(prefix);
+        return node != null;
+    }
+
+    private Trie searchPrefix(String word) {
+        Trie node = this;
+        char[] words = word.toCharArray();
+        for (int i = 0;i < words.length;i++) {
+            node = node.next[words[i] - 'a'];
+            if (node == null) return null;
+        }
+        return node;
+    }
+  }
+  ```
+
+  2、并查集(Disjoint Set)
+  - 适用场景：组团、配对问题
+  - 基本操作：
+    - makeSet(s)：建立一个新的并查集，其中包含 s 个单元素集合。
+    - unionSet(x, y)：把元素 x 和元素 y 所在的集合合并，要求 x 和 y 所在的集合不相交，如果相交则不合并。
+    - find(x)：找到元素 x 所在的集合的代表，该操作也可以用于判断两个元 素是否位于同一个集合，只要将它们各自的代表比较一下就可以了。
+  - 代码模版：
+  ```
+  class UnionFind { 
+	private int count = 0; 
+	private int[] parent; 
+	public UnionFind(int n) { 
+         count = n;
+         parent = new int[n];
+         for (int i = 0; i < n; i++) {
+             parent[i] = i;
+         }
+	} 
+	public int find(int p) { 
+        while (parent[p] != p) {
+            parent[p] = parent[parent[p]];//状态压缩
+            p = parent[p];
+        }
+        return p;
+	}
+	public void union(int p, int q) { 
+        int rootP = find(p);
+        int rootQ = find(q);
+        if (rootP == rootQ) return;
+        parent(rootP) = rootQ;。//合并
+        count--;
+	}  
+    public int getCount() {
+        return count;
+    }
+  }
+  ```
+
+  #### 十四、高级搜索
+  
+  1、剪枝
+  
+  对回溯算法的优化，对一些能够提前判定其不满足最终答案的分枝，提前结束当前层的递归。
+
+  2、双向 BFS
+  
+  相关题目：
+  - https://leetcode-cn.com/problems/word-ladder/
+  - https://leetcode-cn.com/problems/minimum-genetic- mutation/
+  
+  3、启发式搜索 A* search
+  
+  相关题目：
+  - https://leetcode-cn.com/problems/shortest-path-in-binary-matrix/
+  - https://leetcode-cn.com/problems/sliding-puzzle/
+  - https://leetcode-cn.com/problems/sudoku-solver/
+
+  #### 十五、高级树、AVL 树、红黑树
+  
+  1、AVL 树
+  
+  - 是一种平衡二叉搜索树
+  - 每个结点存 balancefactor = {-1,0,1}
+  - 适用四种旋转操作来维持平衡
+  - 缺点：结点需要存放额外信息，且调整次数频繁
+
+  2、红黑树(Red-Black Tree)
+  
+  - 定义：红黑树是一种近似平衡的二叉搜索树(Binary Search Tree)，它能够确保任何一个结点的左右子树的高度差小于两倍。
+  - 红黑树是满足如下条件的二叉搜索树:
+    - 每个结点要么是红色，要么是黑色
+    - 根结点是黑色
+    - 每个叶结点(NIL结点，空结点)是黑色的。
+    - 不能有相邻接的两个红色结点
+    - 从任一结点到其每个叶子的所有路径都包含相同数目的黑色结点。
+  - 关键性质：从根到叶子的最长的可能路径不多于最短的可能路径的两倍长。
+  
+  3、AVL 树 VS 红黑树
+  - AVL trees provide faster lookups than Red Black Trees because they are more strictly balanced.
+  - Red Black Trees provide faster insertion and removal operations than AVL trees as fewer rotations are done due to relatively relaxed balancing.
+  - AVL trees store balance factors or heights with each node, thus requires storage for an integer per node whereas Red Black Tree requires only 1 bit of information per node.
+  - Red Black Trees are used in most of the language libraries like map, multimap, multisetin C++whereas AVL trees are used in databases where faster retrievals are required.
+
+  #### 十六、位运算
+  
+  1、指定位置的位运算
+  - 将x最右边的 n 位清零：x & (~0 << n)
+  - 获取x的第 n 位值(0 或者 1)：(x >> n) & 1
+  - 获取x的第 n 位的幂值：x & (1 << n)
+  - 仅将第 n 位置为 1：x | (1 << n)
+  - 仅将第 n 位置为 0：x & (~(1 << n))
+  - 将x最高位至第 n 位(含)清零：x & ((1 << n) - 1)
+
+  2、实战位运算要点
+  - 判断奇偶：
+    - x % 2 == 1 —> (x & 1) == 1 
+    - x % 2 == 0 —> (x & 1) == 0 
+  - x >> 1 —> x / 2 即：x = x / 2; —> x = x >> 1; mid = (left + right) / 2; —> mid = (left + right) >> 1;
+  - X = X & (X - 1)清零最低位的1
+  - X & -X => 得到最低位的1
+  - X & ~X => 0
+
+  3、N 皇后的位运算解法
+  ```
+  class Solution {
+    private int size;
+    private int count;
+
+    private void solve(int row, int ld, int rd) { 
+        if (row == size) {
+            count++;
+            return; 
+        }
+        int pos = size & (~(row | ld | rd)); while (pos != 0) {
+            int p = pos & (-pos);
+            pos -= p; // pos &= pos - 1;
+            solve(row | p, (ld | p) << 1, (rd | p) >> 1);
+        } 
+    }
+
+    public int totalNQueens(int n) { 
+        count = 0;
+        size = (1 << n) - 1;
+        solve(0, 0, 0);
+        return count; 
+    }
+  }
+  ```
+  
+  #### 十七、布隆过滤器、LRU Cache
+  
+  1、布隆过滤器(Bloom Filter)
+  - 布隆过滤器一个很长的二进制向量和一系列随机映射函数。布隆过滤器可以用于检索一个元素是否在一个集合中。
+  - 优点是空间效率和查询时间都远远超过一般的算法，缺点是有一定的误识别率和删除困难。因此，布隆过滤器一般用于确定一个元素是否【不在】一个集合中。
+  - Java 实现：https://github.com/lovasoa/bloomfilter/blob/master/src/main/ java/BloomFilter.java
+  
+  2、LRU Cache
+  - 两个要素：大小、替换策略
+  - 数据结构：HashTable + Double LinkedList
+  - 替换策略：
+    - LFU - least frequently used 
+    - LRU - least recently used
+  - 相关题目：https://leetcode-cn.com/problems/lru-cache/#/
+  - 代码：
+  ```
+  public class LRUCache {
+    private Map<Integer, Integer> map;
+
+    public LRUCache(int capacity) {
+        map = new LinkedCappedHashMap<>(capacity);
+    }
+    public int get(int key) { 
+        if (!map.containsKey(key)) { 
+            return -1; 
+       }
+       return map.get(key);
+   }
+   public void put(int key, int value) { 
+       map.put(key,value);
+   }
+   private static class LinkedCappedHashMap<K,V> extends LinkedHashMap<K,V> {
+       int maximumCapacity;
+        LinkedCappedHashMap(int maximumCapacity) { 
+            super(16, 0.75f, true); 
+            this.maximumCapacity = maximumCapacity;
+       }
+        protected boolean removeEldestEntry(Map.Entry eldest) { 
+            return size() > maximumCapacity;
+        } 
+    }
+  }
+  ```
+  
+  #### 十八、排序算法
+  
+  1、分类：
+  - 比较类排序：通过比较来决定元素间的相对次序，由于其时间复杂度不能突破 O(nlogn)，因此也称为非线性时间比较类排序。
+  - 非比较类排序：不通过比较来决定元素间的相对次序，它可以突破基于比较排序的时间下界，以线性时间运行，因此也称为线性时间非比较类排序。
+  
+  2、排序算法总揽
+  ![image](https://github.com/ThinkPeng/-algorithm015/blob/master/Week_010/AllOrderAlgorithm.png)
+  
+  ![image](https://github.com/ThinkPeng/-algorithm015/blob/master/Week_010/OrderAlgorithmDetail.png)
+  
+  #### 十九、高级动态规划
+  
+  1、复杂度来源
+  - 状态拥有更多维度(二维、三维、或者更多、甚至需要压缩) 
+  - 状态方程更加复杂
   
   
+  #### 二十、字符串
   
-  
-  
-  
-  
-  
-  
-  
+  1、常见算法题目
+  - 判断回文串：https://leetcode-cn.com/problems/valid-palindrome/
+  - 最长子串、子序列、编辑距离
+    - https://leetcode-cn.com/problems/longest-common-subsequence/
+    - https://leetcode-cn.com/problems/edit-distance/
+
+  2、字符串匹配算法
+  - 暴力法
+  - Rabin-Karp 算法                       
+  - KMP 算法
  
