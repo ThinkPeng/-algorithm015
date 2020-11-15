@@ -38,7 +38,36 @@ https://redisbook.readthedocs.io/en/latest/internal-datastruct/skiplist.html
 - 队列(Queue)：先进先出。
   ```
   Queue<T> queue = new LinkedList();
-  
-  
+  queue.offer(1);//末尾添加元素
+  queue.poll();  //弹出末尾元素
+  queue.peek();  //查看末尾元素
   ```
-- 双端队列(Deque)：两端都可以进出的队列。Java 中，可直接使用 Deque 来代替栈和队列。(Deque<T> deque = new LinkedList<>();)
+- 双端队列(Deque)：两端都可以进出的队列。Java 中，可直接使用 Deque 来代替栈和队列。官方文档：https://docs.oracle.com/javase/7/docs/api/java/util/Deque.html
+  ```
+  Deque<T> deque = new LinkedList<>();
+  deque.addFirst(1);   //队头添加元素
+  deque.removeFirst(); //队头删除元素
+  deque.peekFirst();   //查看队头元素
+  deque.addLast(1);    //队尾添加元素
+  deque.removeLast();  //队尾删除元素
+  deque.peekLast();    //查看队尾元素
+  ```
+- 优先队列(PriorityQueue)：按照元素优先级出队的队列。插入操作 O(1)，取出操作 O(log N)。官方文档：https://docs.oracle.com/javase/10/docs/api/java/util/PriorityQueue.html
+  ```
+  PriorityQueue<T> priorityQueue = new PriorityQueue<>();
+  priorityQueue.offer(1);
+  priorityQueue.poll();
+  priorityQueue.peek();
+  ```
+  
+  2、常见数据数据结构时间复杂度
+  ![image](https://github.com/ThinkPeng/-algorithm015/blob/master/Week_010/CommonDataStructure.png)
+  
+  
+  
+  
+  
+  
+  
+  
+ 
